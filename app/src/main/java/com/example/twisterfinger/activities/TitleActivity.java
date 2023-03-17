@@ -1,24 +1,18 @@
 package com.example.twisterfinger.activities;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 
 import com.example.twisterfinger.R;
 
@@ -29,15 +23,13 @@ public class TitleActivity extends AppCompatActivity {
     private Button threeFingerBtn;
     private Button calibrateLightBtn;
 
-    private View.OnClickListener fingerButtonListener;
-
     private Context appContext;
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         appContext = getApplicationContext();
         setContentView(R.layout.activity_title);
@@ -56,18 +48,18 @@ public class TitleActivity extends AppCompatActivity {
 
     private void setButtonListeners() {
         // Setting finger buttons listener
-        fingerButtonListener = view -> {
+        View.OnClickListener fingerButtonListener = view -> {
             switch (view.getId()) {
-                case(R.id.oneFingerBtn) :
+                case (R.id.oneFingerBtn):
                     saveFingerNumber(1);
                     break;
-                case(R.id.twoFingerBtn) :
+                case (R.id.twoFingerBtn):
                     saveFingerNumber(2);
                     break;
-                case(R.id.threeFingerBtn) :
+                case (R.id.threeFingerBtn):
                     saveFingerNumber(3);
                     break;
-                default :
+                default:
                     System.out.println("Unknown button id, setting 1 as default difficulty;");
                     saveFingerNumber(1);
                     break;
@@ -84,11 +76,12 @@ public class TitleActivity extends AppCompatActivity {
     }
 
     private void saveFingerNumber(int nbFingers) {
-        prefs.edit().putInt("nbFingers", nbFingers);
-        prefs.edit().apply();
+        prefs.edit()
+                .putInt("nbFingers", nbFingers)
+                .apply();
     }
 
-    private void calibrateLight(){
+    private void calibrateLight() {
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
 
@@ -125,6 +118,8 @@ public class TitleActivity extends AppCompatActivity {
     }
 
     private void startGameActivity() {
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
     }
 
     @Override
