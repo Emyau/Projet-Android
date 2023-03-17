@@ -16,6 +16,7 @@ import android.view.View;
 
 import com.example.twisterfinger.activities.views.objects.Couleur;
 import com.example.twisterfinger.activities.views.objects.TwisterCircle;
+import com.example.twisterfinger.engine.GameEngine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,7 @@ public class GameView extends View {
             //not used
         }
     };
+    private GameEngine engine;
 
     public GameView(Context context) {
         super(context);
@@ -68,6 +70,7 @@ public class GameView extends View {
 
         onDrawRunnable = this::invalidate;
         handler = new Handler();
+        engine = new GameEngine();
 
     }
 
@@ -100,6 +103,17 @@ public class GameView extends View {
         long startTime = System.nanoTime();
 
         float coefLumi = prefs.getFloat("coefLumi", 0);
+        switch (engine.getState()) {
+            case WHEEL:
+                break;
+            case FINGER:
+                break;
+            case FREEZE:
+                break;
+            case GAME_OVER:
+                break;
+        }
+
         drawCircles(canvas, ambiantLight, coefLumi);
 
         long stopTime = System.nanoTime();
