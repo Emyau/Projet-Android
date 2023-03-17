@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.widget.Switch;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,37 +14,57 @@ public class Wheel {
         IDLE
     }
 
-    private Integer index = 0;
+    private enum Finger {
+        MAJEUR,
+        INDEX,
+        POUCE,
+        AURICULAIRE,
+        ANNULAIRE
+    }
+
+    private enum Side {
+        DROIT,
+        GAUCHE
+    }
+
+    public Integer finger = 0;
+    public Integer side = 0;
     private Random random = new Random();
     private ArrayList<Integer> list;
-    private final Integer MAXInt = 3;
-    private final Integer x = 1000;
-    private final Integer y = 0;
+    private final Integer weidth = 100;
     private State state = State.IDLE;
     private MicroHandler microHandler;
     private Context context;
     private Paint paint;
+    private final Integer MAX_FRAME = 60;
+    private Integer frame = 0;
 
     public Wheel(Context context){
         paint = new Paint();
         this.context = context;
     }
 
-    public Integer draw(Canvas canvas){
+    public void draw(Canvas canvas){
         switch (state){
             case IDLE:
                 paint.setColor(Color.RED);
-                canvas.drawRect( x, y, x + 100, 100, paint);
+                canvas.drawRect( (canvas.getWidth()/2)-(weidth/2), 0, canvas.getWidth()/2 + (weidth/2), weidth, paint);
                 break;
             case SPINNING:
-                for(int i = 0; i < MAXInt; i++){
-                    index = random.nextInt(MAXInt);
-                    paint.setColor(Color.BLUE);
-                    canvas.drawRect( x, y, x + 100, 100, paint);
+
+                finger = random.nextInt(5);
+                side = random.nextInt(2);
+                paint.setColor(Color.BLUE);
+                canvas.drawRect( (canvas.getWidth()/2)-(weidth/2), 0, canvas.getWidth()/2 + (weidth/2), weidth, paint);
+                frame = (frame+1)%MAX_FRAME ;
+                if(frame == 0 ){
+                    state = State.IDLE;
                 }
                 break;
         }
-        return index;
+        Paint p = new Paint();
+        p.setColor(Color.WHITE);
+        canvas.drawText(Finger.values()[finger]+" "+Side.values()[side], (canvas.getWidth()/2)-(weidth/2), 50, p);
     }
 
     public void trigger(){
@@ -62,11 +81,6 @@ public class Wheel {
         });
         wheelThread.start();
     }
-
-    public Integer getNewMouve(MicroHandler microHandler){
-        return index;
-    }
-
 
 
 }
