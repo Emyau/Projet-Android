@@ -29,7 +29,7 @@ import java.util.List;
 
 public class GameView extends View {
 
-    private static final int NB_ROW = 7;
+    private static final int NB_ROW = 6;
     private static final int NB_COLLUMN = 4;
     private static final long UPDATE_TIME = 1000 / 60;
 
@@ -99,7 +99,7 @@ public class GameView extends View {
             for (int j = 0; j < NB_COLLUMN; j++) {
                 // 0.8 is the game size, we keep 20% for the margin
                 int cx = (int) (j * ((getWidth() * 0.8) / (NB_COLLUMN - 1)) + getWidth() * 0.1);
-                int cy = (int) (i * ((getHeight() * 0.8) / (NB_ROW - 1)) + getHeight() * 0.1);
+                int cy = (int) (i * ((getHeight() * 0.8) / (NB_ROW)) + getHeight() * 0.1);
 
                 int index = i * NB_COLLUMN + j;
 
