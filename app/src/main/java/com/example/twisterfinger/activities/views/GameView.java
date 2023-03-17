@@ -81,7 +81,7 @@ public class GameView extends View {
 
         onDrawRunnable = this::invalidate;
         handler = new Handler();
-        engine = new GameEngine();
+        engine = new GameEngine(context);
         randomFinger = new RandomGenerator(context);
         wheel = new Wheel(context);
 
@@ -220,11 +220,4 @@ public class GameView extends View {
         return null;
     }
 
-    private void gameOver() {
-        // Get instance of Vibrator from current Context
-        Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-        // Vibrate for 400 milliseconds
-        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-        Toast.makeText(this.getContext(), "LOOSER !", Toast.LENGTH_SHORT).show();
-    }
 }
