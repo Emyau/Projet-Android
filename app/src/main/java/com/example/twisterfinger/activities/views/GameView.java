@@ -134,7 +134,6 @@ public class GameView extends View {
                 break;
             case GAME_OVER:
                 Log.d("DEV", "onDraw: LOOSER");
-                engine.gameover();
                 break;
         }
 
