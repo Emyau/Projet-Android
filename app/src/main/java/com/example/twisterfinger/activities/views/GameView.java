@@ -2,13 +2,19 @@ package com.example.twisterfinger.activities.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.twisterfinger.activities.views.objects.Couleur;
 import com.example.twisterfinger.activities.views.objects.TwisterCircle;
 
 import java.util.ArrayList;
@@ -27,6 +33,22 @@ public class GameView extends View {
     private final Runnable onDrawRunnable;
     private final Handler handler;
 
+    private float ambiantLight;
+
+    SharedPreferences prefs = this.getContext().getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
+
+    private final SensorEventListener listenerLight = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            ambiantLight = sensorEvent.values[0];
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int i) {
+            //not used
+        }
+    };
+
     public GameView(Context context) {
         super(context);
         twisterCircleList = new ArrayList<>();
@@ -34,13 +56,13 @@ public class GameView extends View {
         for (int i = 0; i < nbElement; i++) {
             int col = i % NB_COLLUMN;
             if (col == 0) {
-                twisterCircleList.add(new TwisterCircle(Color.RED));
+                twisterCircleList.add(new TwisterCircle(Couleur.ROUGE_F));
             } else if (col == 1) {
-                twisterCircleList.add(new TwisterCircle(Color.YELLOW));
+                twisterCircleList.add(new TwisterCircle(Couleur.VERT_F));
             } else if (col == 2) {
-                twisterCircleList.add(new TwisterCircle(Color.GREEN));
+                twisterCircleList.add(new TwisterCircle(Couleur.BLEU_F));
             } else {
-                twisterCircleList.add(new TwisterCircle(Color.rgb(138, 43, 226)));
+                twisterCircleList.add(new TwisterCircle(Couleur.VIOLET_F));
             }
         }
 
@@ -52,6 +74,8 @@ public class GameView extends View {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+
+        setupListener();
 
         int circleRadius = (int) (getWidth() * 0.07);
 
@@ -75,7 +99,8 @@ public class GameView extends View {
         super.onDraw(canvas);
         long startTime = System.nanoTime();
 
-        drawCircles(canvas);
+        float coefLumi = prefs.getFloat("coefLumi", 0);
+        drawCircles(canvas, ambiantLight, coefLumi);
 
         long stopTime = System.nanoTime();
         long timeElapsed = (stopTime - startTime) / 1000000;
@@ -87,8 +112,8 @@ public class GameView extends View {
         }
     }
 
-    private void drawCircles(Canvas canvas) {
-        twisterCircleList.forEach(twisterCircle -> twisterCircle.draw(canvas));
+    private void drawCircles(Canvas canvas, float ambiantLight, float coefLumi) {
+        twisterCircleList.forEach(twisterCircle -> twisterCircle.draw(canvas, ambiantLight, coefLumi));
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -105,6 +130,12 @@ public class GameView extends View {
             return true;
         }
         return false;
+    }
+
+    private void setupListener() {
+        SensorManager sm = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
+        Sensor sensorLight = sm.getDefaultSensor(Sensor.TYPE_LIGHT);
+        sm.registerListener(listenerLight, sensorLight, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     private TwisterCircle getCircleTouched(float x, float y) {
