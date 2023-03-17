@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.twisterfinger.activities.views.objects.Couleur;
+import com.example.twisterfinger.FreezeHandler;
 import com.example.twisterfinger.activities.views.objects.TwisterCircle;
 import com.example.twisterfinger.engine.GameEngine;
 import com.example.twisterfinger.engine.RandomGenerator;
@@ -50,7 +51,8 @@ public class GameView extends View {
         }
     };
     private GameEngine engine;
-    private RandomGenerator randomFinger;
+    private RandomFinger randomFinger;
+    private final FreezeHandler freezeHandler = new FreezeHandler(getContext());
 
     public GameView(Context context) {
         super(context);
@@ -149,6 +151,7 @@ public class GameView extends View {
                     TwisterCircle circleTouched = getCircleTouched(event.getX(index), event.getY(index));
                     if (circleTouched != null) {
                         engine.checkGoodCircle(circleTouched);
+                        freezeHandler.attemptFreeze();
                     }
                     break;
                 case FREEZE:
