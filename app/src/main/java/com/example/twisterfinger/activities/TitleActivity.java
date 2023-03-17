@@ -112,7 +112,7 @@ public class TitleActivity extends AppCompatActivity {
 
             @Override
             public void onAccuracyChanged(Sensor sensor, int i) {
-                //osef
+                //pas besoin ici
             }
         };
 
