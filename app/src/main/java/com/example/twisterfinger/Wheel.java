@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import com.example.twisterfinger.activities.views.objects.Couleur;
 import com.example.twisterfinger.engine.FingerEnum;
 import com.example.twisterfinger.engine.RandomFinger;
 
@@ -26,23 +27,29 @@ public class Wheel {
     private final Integer MAX_FRAME = 60;
     private Integer frame = 0;
     private RandomFinger random;
+    private Couleur couleur;
 
     public Wheel(Context context){
         paint = new Paint();
         this.context = context;
         random = new RandomFinger();
         finger = random.getRandomFinger();
+        couleur = random.getRandomCouleur();
     }
 
     public void draw(Canvas canvas){
+        int color;
         switch (state){
             case IDLE:
-                paint.setColor(Color.RED);
+                color = Color.rgb(couleur.getCouleurAsRed(),couleur.getCouleurAsGreen(),couleur.getCouleurAsBlue());
+                paint.setColor(color);
                 canvas.drawRect( (canvas.getWidth()/2)-(weidth/2), 0, canvas.getWidth()/2 + (weidth/2), weidth, paint);
                 break;
             case SPINNING:
                 finger = random.getRandomFinger();
-                paint.setColor(Color.BLUE);
+                couleur = random.getRandomCouleur();
+                color = Color.rgb(couleur.getCouleurAsRed(),couleur.getCouleurAsGreen(),couleur.getCouleurAsBlue());
+                paint.setColor(color);
                 canvas.drawRect( (canvas.getWidth()/2)-(weidth/2), 0, canvas.getWidth()/2 + (weidth/2), weidth, paint);
                 frame = (frame+1)%MAX_FRAME ;
                 if(frame == 0 ){
