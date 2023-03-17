@@ -1,18 +1,18 @@
 package com.example.twisterfinger.activities.views.objects;
 
 public enum Couleur {
-    ROUGE_F(255, 0, 0, 0),
-    ROUGE_M(215,153,2, 0),
-    ROUGE_C(254, 254, 51, 0),
+    ROUGE_F(150, 19, 22, 0),
+    ROUGE_M(191,24,29, 0),
+    ROUGE_C(227, 34, 39, 0),
     VERT_F(0, 117, 0, 1),
     VERT_M(0,163,0, 1),
     VERT_C(0,255,0, 1),
     BLEU_F(0, 48, 96, 2),
     BLEU_M(14, 134, 212, 2),
     BLEU_C(104, 187, 227, 2),
-    VIOLET_F(92,1,163, 3),
+    VIOLET_F(66,1,117, 3),
     VIOLET_M(117, 0, 209, 3),
-    VIOLET_C(194, 20, 96, 3);
+    VIOLET_C(203, 138, 255, 3);
 
     private final int r;
     private final int g;

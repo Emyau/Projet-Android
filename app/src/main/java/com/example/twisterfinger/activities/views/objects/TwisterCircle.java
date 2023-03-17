@@ -25,9 +25,10 @@ public class TwisterCircle {
 
     public void draw(Canvas canvas, float ambiantLight, float coefLumi) {
 
-        // Couleur newCouleur = couleur;
+        int couleurExte;
 
         if (ambiantLight < coefLumi / 3) {
+            couleurExte = Color.WHITE;
             switch (couleur.getCouleurAsHue()) {
                 case (0):
                     couleur = Couleur.ROUGE_C;
@@ -45,6 +46,7 @@ public class TwisterCircle {
         }
 
         else if (ambiantLight < (coefLumi/3)*2) {
+            couleurExte = Color.LTGRAY;
             switch (couleur.getCouleurAsHue()) {
                 case (0):
                     couleur = Couleur.ROUGE_M;
@@ -62,6 +64,7 @@ public class TwisterCircle {
         }
 
         else {
+            couleurExte = Color.GRAY;
             switch (couleur.getCouleurAsHue()) {
                 case (0):
                     couleur = Couleur.ROUGE_F;
@@ -78,11 +81,11 @@ public class TwisterCircle {
             }
         }
 
-        Paint paintTest = new Paint();
-        paintTest.setColor(Color.RED);
+        Paint paintExte = new Paint();
+        paintExte.setColor(couleurExte);
         paint.setColor(Color.rgb(couleur.getCouleurAsRed(), couleur.getCouleurAsGreen(), couleur.getCouleurAsBlue()));
+        canvas.drawCircle(cx, cy, radius+5, paintExte);
         canvas.drawCircle(cx, cy, radius, paint);
-        canvas.drawText(Float.toString(coefLumi), 50, 50, paintTest);
     }
 
     public static boolean isInsideTheCircle(TwisterCircle circle, float px, float py) {
