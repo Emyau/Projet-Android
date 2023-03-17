@@ -1,5 +1,6 @@
 package com.example.twisterfinger.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.twisterfinger.R;
 
@@ -41,6 +43,8 @@ public class TitleActivity extends AppCompatActivity {
         setButtons();
         setButtonListeners();
         setupLumCaptor();
+        //Pour demander l'autorisation manuelle au démarrage
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 200);
     }
 
     private void setupLumCaptor() {
