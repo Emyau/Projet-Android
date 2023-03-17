@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.TitleActivity">
+
+    <TextView
+        android:id="@+id/titleLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Twister Fingers"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.164" />
+
+    <TextView
+        android:id="@+id/nbDoigtsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="Nombre de doigts"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleLabel" />
+
+    <Button
+        android:id="@+id/oneFingerBtn"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="21dp"
+        android:text="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nbDoigtsLabel" />
+
+    <Button
+        android:id="@+id/twoFingerBtn"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="10dp"
+        android:text="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/oneFingerBtn" />
+
+    <Button
+        android:id="@+id/threeFingerBtn"
+        android:layout_width="54dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:text="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/twoFingerBtn" />
+
+    <Button
+        android:id="@+id/calibrateLightBtn"
+        android:layout_width="197dp"
+        android:layout_height="64dp"
+        android:text="Calibrer lumière"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.96" />
+
+    <ImageButton
+        android:id="@+id/calibrateInfoBtn"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.347"
+        app:layout_constraintStart_toEndOf="@+id/calibrateLightBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.952"
+        app:srcCompat="@android:drawable/ic_menu_info_details" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
