@@ -11,12 +11,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.twisterfinger.Wheel;
 import com.example.twisterfinger.activities.views.objects.Couleur;
@@ -137,6 +134,7 @@ public class GameView extends View {
                 break;
             case GAME_OVER:
                 Log.d("DEV", "onDraw: LOOSER");
+                engine.gameover();
                 break;
         }
 
