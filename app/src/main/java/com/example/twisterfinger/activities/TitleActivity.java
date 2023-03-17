@@ -63,7 +63,7 @@ public class TitleActivity extends AppCompatActivity {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
                 if (valueDeprecated) {
-                    Log.d("DEV", "onSensorChanged: UPDATE LUM");
+                    //Log.d("DEV", "onSensorChanged: UPDATE LUM");
                     float value = sensorEvent.values[0];
                     editor.putFloat("coefLumi", value).apply();
                     valueDeprecated = false;
