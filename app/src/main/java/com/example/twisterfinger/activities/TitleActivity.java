@@ -10,6 +10,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -32,11 +33,16 @@ public class TitleActivity extends AppCompatActivity {
 
     private Context appContext;
 
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         appContext = getApplicationContext();
         setContentView(R.layout.activity_title);
+        prefs = appContext.getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
+        editor = prefs.edit();
         setButtons();
         setButtonListeners();
     }
@@ -78,7 +84,6 @@ public class TitleActivity extends AppCompatActivity {
     }
 
     private void saveFingerNumber(int nbFingers) {
-        SharedPreferences prefs = appContext.getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
         prefs.edit().putInt("nbFingers", nbFingers);
         prefs.edit().apply();
     }
@@ -86,29 +91,45 @@ public class TitleActivity extends AppCompatActivity {
     private void calibrateLight(){
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        final float[] lightLevel = {0f};
-        sensorManager.registerListener(new SensorEventListener() {
+
+        SharedPreferences prefs = appContext.getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        if (lightSensor == null) {
+            Toast.makeText(this, "The device has no light sensor !", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        SensorEventListener lightEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
-                lightLevel[0] = sensorEvent.values[0];
+                float value = sensorEvent.values[0];
+                if (prefs.getFloat("coefLumi", 0) == 0) {
+                    editor.putFloat("coefLumi", value);
+                    editor.apply();
+                    CharSequence text = "Lumière calibrée !";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(appContext, text, duration);
+                    toast.show();
+                }
             }
 
             @Override
             public void onAccuracyChanged(Sensor sensor, int i) {
-
+                //osef
             }
-        }, lightSensor,SensorManager.SENSOR_DELAY_NORMAL);
-        SharedPreferences prefs = appContext.getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
-        prefs.edit().putFloat("lightLevel", lightLevel[0]);
-        prefs.edit().apply();
-
-        CharSequence text = "Lumière calibrée !";
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(appContext, text, duration);
-        toast.show();
+        };
+        sensorManager.registerListener(lightEventListener, lightSensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     private void startGameActivity() {
-
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        editor.putFloat("coefLumi", 0);
+        editor.apply();
+    }
+
 }
