@@ -5,6 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import com.example.twisterfinger.engine.FingerEnum;
+import com.example.twisterfinger.engine.RandomFinger;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -14,23 +17,7 @@ public class Wheel {
         IDLE
     }
 
-    private enum Finger {
-        MAJEUR,
-        INDEX,
-        POUCE,
-        AURICULAIRE,
-        ANNULAIRE
-    }
-
-    private enum Side {
-        DROIT,
-        GAUCHE
-    }
-
-    public Integer finger = 0;
-    public Integer side = 0;
-    private Random random = new Random();
-    private ArrayList<Integer> list;
+    public FingerEnum finger;
     private final Integer weidth = 100;
     private State state = State.IDLE;
     private MicroHandler microHandler;
@@ -38,10 +25,13 @@ public class Wheel {
     private Paint paint;
     private final Integer MAX_FRAME = 60;
     private Integer frame = 0;
+    private RandomFinger random;
 
     public Wheel(Context context){
         paint = new Paint();
         this.context = context;
+        random = new RandomFinger();
+        finger = random.getRandomFinger();
     }
 
     public void draw(Canvas canvas){
@@ -51,9 +41,7 @@ public class Wheel {
                 canvas.drawRect( (canvas.getWidth()/2)-(weidth/2), 0, canvas.getWidth()/2 + (weidth/2), weidth, paint);
                 break;
             case SPINNING:
-
-                finger = random.nextInt(5);
-                side = random.nextInt(2);
+                finger = random.getRandomFinger();
                 paint.setColor(Color.BLUE);
                 canvas.drawRect( (canvas.getWidth()/2)-(weidth/2), 0, canvas.getWidth()/2 + (weidth/2), weidth, paint);
                 frame = (frame+1)%MAX_FRAME ;
@@ -64,7 +52,8 @@ public class Wheel {
         }
         Paint p = new Paint();
         p.setColor(Color.WHITE);
-        canvas.drawText(Finger.values()[finger]+" "+Side.values()[side], (canvas.getWidth()/2)-(weidth/2), 50, p);
+        String text = finger.toString();
+        canvas.drawText(text, (canvas.getWidth()/2)-text.length(), 50, p);
     }
 
     public void trigger(){
