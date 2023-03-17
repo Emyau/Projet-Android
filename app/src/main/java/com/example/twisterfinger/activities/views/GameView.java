@@ -16,7 +16,7 @@ import android.view.View;
 import com.example.twisterfinger.activities.views.objects.Couleur;
 import com.example.twisterfinger.activities.views.objects.TwisterCircle;
 import com.example.twisterfinger.engine.GameEngine;
-import com.example.twisterfinger.engine.RandomFinger;
+import com.example.twisterfinger.engine.RandomGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class GameView extends View {
         }
     };
     private GameEngine engine;
-    private RandomFinger randomFinger;
+    private RandomGenerator randomFinger;
 
     public GameView(Context context) {
         super(context);
@@ -72,7 +72,7 @@ public class GameView extends View {
         onDrawRunnable = this::invalidate;
         handler = new Handler();
         engine = new GameEngine();
-        randomFinger = new RandomFinger();
+        randomFinger = new RandomGenerator(context);
 
     }
 
@@ -148,7 +148,6 @@ public class GameView extends View {
                     int index = event.getActionIndex();
                     TwisterCircle circleTouched = getCircleTouched(event.getX(index), event.getY(index));
                     if (circleTouched != null) {
-                        // Do something when circle is touched here
                         engine.checkGoodCircle(circleTouched);
                     }
                     break;
@@ -163,7 +162,11 @@ public class GameView extends View {
                 case WHEEL:
                     break;
                 case FINGER:
-                    engine.gameover();
+                    int index = event.getActionIndex();
+                    TwisterCircle circleTouched = getCircleTouched(event.getX(index), event.getY(index));
+                    if (circleTouched != null) {
+                        engine.checkAllowedActionUp(circleTouched);
+                    }
                     break;
                 case FREEZE:
                     break;
