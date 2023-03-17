@@ -59,7 +59,7 @@ public class GameEngine {
         Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         // Vibrate for 400 milliseconds
         v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-        Toast.makeText(context, "LOOSER !", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "YOU LOSE ! Restart the app", Toast.LENGTH_SHORT).show();
         state = StateEnum.GAME_OVER;
     }
 

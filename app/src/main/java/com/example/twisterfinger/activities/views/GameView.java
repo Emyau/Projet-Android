@@ -181,6 +181,7 @@ public class GameView extends View {
                 case FREEZE:
                     break;
                 case GAME_OVER:
+                    engine.gameover();
                     break;
             }
             return true;
