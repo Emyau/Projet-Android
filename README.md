@@ -21,3 +21,6 @@ Une plaque de glace peut apparaître sur votre écran quand vous vous y attendre
 + Microphone : Souffler dans le micro fait tourner un menu déroulant permettant de choisir la couleur et la main avec lesquelles jouer
 + Accéléromètre : Secouer l'appareil permet de faire disparaître la glace
 + Luminosité : Permet de faire changer les teintes de la grille de jeu
+
+# Assets
+Tous les assets du jeu ont été produits par l'équipe
