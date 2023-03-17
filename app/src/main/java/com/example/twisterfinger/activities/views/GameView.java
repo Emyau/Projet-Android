@@ -40,7 +40,7 @@ public class GameView extends View {
             } else if (col == 2) {
                 twisterCircleList.add(new TwisterCircle(Color.GREEN));
             } else {
-                twisterCircleList.add(new TwisterCircle(Color.rgb(138,43,226)));
+                twisterCircleList.add(new TwisterCircle(Color.rgb(138, 43, 226)));
             }
         }
 
@@ -94,9 +94,10 @@ public class GameView extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN || event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) {
             Log.d("DEV", String.format("onTouchEvent: Touch at %f %f", event.getX(), event.getY()));
-            TwisterCircle circleTouched = getCircleTouched(event.getX(), event.getY());
+            int index = event.getActionIndex();
+            TwisterCircle circleTouched = getCircleTouched(event.getX(index), event.getY(index));
             if (circleTouched != null) {
                 // Do something when circle is touched here
                 circleTouched.setColor(Color.BLUE);
