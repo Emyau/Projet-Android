@@ -57,7 +57,7 @@ public class FreezeHandler {
 
     private void triggerFreeze() {
         frozenState = FrozenState.FULL_FROZEN;
-        engine.forceGameState(GameEngine.StateEnum.FREEZE);
+        engine.nextState();
         Log.d("DEV", "FULL_FROZEN");
     }
 
