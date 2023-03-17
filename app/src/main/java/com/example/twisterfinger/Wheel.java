@@ -51,8 +51,9 @@ public class Wheel {
 
         Paint p = new Paint();
         p.setColor(Color.WHITE);
+        p.setTextSize(30);
         String text = finger.toString();
-        canvas.drawText(text, (canvas.getWidth() / 2) - text.length(), 50, p);
+        canvas.drawText(text, (canvas.getWidth() / 2) + (width/2) + 5, 35, p);
     }
 
     public void trigger() {
