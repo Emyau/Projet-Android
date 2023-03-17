@@ -4,13 +4,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-public class TwisterCircle {
+import com.example.twisterfinger.engine.FingerEnum;
 
-    public static final int MARGIN = 50;
+public class TwisterCircle {
 
     private int cx, cy;
     private final Paint paint;
     private int radius;
+
+    private FingerEnum fingerEnum;
 
     private Couleur couleur;
 
@@ -111,5 +113,13 @@ public class TwisterCircle {
 
     public int getRadius() {
         return radius;
+    }
+
+    public FingerEnum getFingerEnum() {
+        return fingerEnum;
+    }
+
+    public void setFingerEnum(FingerEnum fingerEnum) {
+        this.fingerEnum = fingerEnum;
     }
 }

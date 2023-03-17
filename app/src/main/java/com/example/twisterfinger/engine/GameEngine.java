@@ -4,11 +4,10 @@ import com.example.twisterfinger.activities.views.objects.Couleur;
 import com.example.twisterfinger.activities.views.objects.TwisterCircle;
 
 public class GameEngine {
-    public void checkGoodCircle(TwisterCircle circleTouched) {
-        if (!circleTouched.getCouleur().equals(rCouleur)) {
-            this.state = StateEnum.GAME_OVER;
-        } else {
-            state = StateEnum.WHEEL;
+
+    public void checkAllowedActionUp(TwisterCircle circleTouched) {
+        if (!rfinger.equals(circleTouched.getFingerEnum())) {
+            gameover();
         }
     }
 
@@ -50,6 +49,15 @@ public class GameEngine {
 
     public void gameover() {
         state = StateEnum.GAME_OVER;
+    }
+
+    public void checkGoodCircle(TwisterCircle circleTouched) {
+        if (!circleTouched.getCouleur().equals(rCouleur)) {
+            this.state = StateEnum.GAME_OVER;
+        } else {
+            circleTouched.setFingerEnum(rfinger);
+            state = StateEnum.WHEEL;
+        }
     }
 
     public StateEnum getState() {
