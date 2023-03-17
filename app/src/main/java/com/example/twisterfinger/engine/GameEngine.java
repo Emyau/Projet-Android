@@ -1,5 +1,10 @@
 package com.example.twisterfinger.engine;
 
+import android.content.Context;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.widget.Toast;
+
 import com.example.twisterfinger.activities.views.objects.Couleur;
 import com.example.twisterfinger.activities.views.objects.TwisterCircle;
 
@@ -23,9 +28,12 @@ public class GameEngine {
     private Couleur rCouleur;
     private FingerEnum rfinger;
 
+    private Context context;
 
-    public GameEngine() {
+
+    public GameEngine(Context context) {
         state = StateEnum.WHEEL;
+        this.context = context;
     }
 
     public void nextState() {
@@ -48,6 +56,10 @@ public class GameEngine {
     }
 
     public void gameover() {
+        Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        // Vibrate for 400 milliseconds
+        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+        Toast.makeText(context, "YOU LOSE ! Restart the app", Toast.LENGTH_SHORT).show();
         state = StateEnum.GAME_OVER;
     }
 
