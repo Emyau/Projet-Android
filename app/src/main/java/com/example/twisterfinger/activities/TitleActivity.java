@@ -107,10 +107,6 @@ public class TitleActivity extends AppCompatActivity {
                 if (prefs.getFloat("coefLumi", 0) == 0) {
                     editor.putFloat("coefLumi", value);
                     editor.apply();
-                    CharSequence text = "Lumière calibrée !";
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(appContext, text, duration);
-                    toast.show();
                 }
             }
 
@@ -119,7 +115,13 @@ public class TitleActivity extends AppCompatActivity {
                 //osef
             }
         };
+
         sensorManager.registerListener(lightEventListener, lightSensor, SensorManager.SENSOR_DELAY_FASTEST);
+
+        CharSequence text = "Lumière calibrée !";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(appContext, text, duration);
+        toast.show();
     }
 
     private void startGameActivity() {
