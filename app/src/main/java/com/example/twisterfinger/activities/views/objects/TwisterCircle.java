@@ -78,8 +78,11 @@ public class TwisterCircle {
             }
         }
 
+        Paint paintTest = new Paint();
+        paintTest.setColor(Color.RED);
         paint.setColor(Color.rgb(couleur.getCouleurAsRed(), couleur.getCouleurAsGreen(), couleur.getCouleurAsBlue()));
         canvas.drawCircle(cx, cy, radius, paint);
+        canvas.drawText(Float.toString(coefLumi), 50, 50, paintTest);
     }
 
     public static boolean isInsideTheCircle(TwisterCircle circle, float px, float py) {
