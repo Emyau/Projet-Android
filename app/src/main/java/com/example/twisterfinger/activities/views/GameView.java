@@ -13,8 +13,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.twisterfinger.activities.views.objects.Couleur;
 import com.example.twisterfinger.FreezeHandler;
+import com.example.twisterfinger.activities.views.objects.Couleur;
 import com.example.twisterfinger.activities.views.objects.TwisterCircle;
 import com.example.twisterfinger.engine.GameEngine;
 import com.example.twisterfinger.engine.RandomGenerator;
@@ -34,6 +34,8 @@ public class GameView extends View {
 
     private final Runnable onDrawRunnable;
     private final Handler handler;
+    private GameEngine engine;
+    private FreezeHandler freezeHandler;
 
     private float ambiantLight;
 
@@ -53,6 +55,22 @@ public class GameView extends View {
     private GameEngine engine;
     private RandomFinger randomFinger;
     private final FreezeHandler freezeHandler = new FreezeHandler(getContext());
+
+    private float[] accelVector = {0f, 0f, 0f};
+
+    SensorEventListener listenerAccel = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            accelVector[0] = Math.abs(event.values[0]);
+            accelVector[1] = Math.abs(event.values[1]);
+            accelVector[2] = Math.abs(event.values[2]);
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            //not used
+        }
+    };
 
     public GameView(Context context) {
         super(context);
@@ -83,6 +101,7 @@ public class GameView extends View {
         super.onLayout(changed, left, top, right, bottom);
 
         setupListener();
+        freezeHandler = new FreezeHandler(engine, accelVector, this);
 
         int circleRadius = (int) (getWidth() * 0.07);
 
@@ -105,8 +124,10 @@ public class GameView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         long startTime = System.nanoTime();
-
         float coefLumi = prefs.getFloat("coefLumi", 0);
+
+        drawCircles(canvas, ambiantLight, coefLumi);
+
         switch (engine.getState()) {
             case WHEEL:
                 engine.setrCouleur(randomFinger.getRandomCouleur());
@@ -117,13 +138,12 @@ public class GameView extends View {
             case FINGER:
                 break;
             case FREEZE:
+                freezeHandler.checkUnfreeze(canvas);
                 break;
             case GAME_OVER:
                 Log.d("DEV", "onDraw: LOOSER");
                 break;
         }
-
-        drawCircles(canvas, ambiantLight, coefLumi);
 
         long stopTime = System.nanoTime();
         long timeElapsed = (stopTime - startTime) / 1000000;
@@ -185,6 +205,8 @@ public class GameView extends View {
         SensorManager sm = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
         Sensor sensorLight = sm.getDefaultSensor(Sensor.TYPE_LIGHT);
         sm.registerListener(listenerLight, sensorLight, SensorManager.SENSOR_DELAY_NORMAL);
+        Sensor sensorAccel = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sm.registerListener(listenerAccel, sensorAccel, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     private TwisterCircle getCircleTouched(float x, float y) {
