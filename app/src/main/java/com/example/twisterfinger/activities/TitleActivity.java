@@ -51,9 +51,6 @@ public class TitleActivity extends AppCompatActivity {
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
 
-        SharedPreferences prefs = appContext.getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
         if (lightSensor == null) {
             Toast.makeText(this, "The device has no light sensor !", Toast.LENGTH_SHORT).show();
             finish();
@@ -65,7 +62,8 @@ public class TitleActivity extends AppCompatActivity {
                 if (valueDeprecated) {
                     Log.d("DEV", "onSensorChanged: UPDATE LUM");
                     float value = sensorEvent.values[0];
-                    editor.putFloat("coefLumi", value).apply();
+                    editor.putFloat("coefLumi", value);
+                    editor.apply();
                     valueDeprecated = false;
                 }
             }
@@ -98,10 +96,6 @@ public class TitleActivity extends AppCompatActivity {
                     break;
                 case (R.id.threeFingerBtn):
                     saveFingerNumber(3);
-                    break;
-                default:
-                    System.out.println("Unknown button id, setting 1 as default difficulty;");
-                    saveFingerNumber(1);
                     break;
             }
             startGameActivity();

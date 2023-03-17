@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class RandomGenerator {
     private final Random randomGenerator;
-    List<FingerEnum> choosenFingers = new ArrayList<>();
+    List<FingerEnum> chosenFingers = new ArrayList<>();
 
     public RandomGenerator(Context context) {
         randomGenerator = new Random();
@@ -19,16 +19,16 @@ public class RandomGenerator {
         int nbFinger = prefs.getInt("nbFingers", 3);
 
         for (int i = 0; i < nbFinger; i++) {
-            FingerEnum rfing = FingerEnum.values()[0];
+            FingerEnum rfing;
             do {
                 rfing = FingerEnum.values()[randomGenerator.nextInt(FingerEnum.values().length)];
-            } while (choosenFingers.contains(rfing));
-            choosenFingers.add(rfing);
+            } while (chosenFingers.contains(rfing));
+            chosenFingers.add(rfing);
         }
     }
 
     public FingerEnum getRandomFinger() {
-        return choosenFingers.get(randomGenerator.nextInt(choosenFingers.size()));
+        return chosenFingers.get(randomGenerator.nextInt(chosenFingers.size()));
     }
 
     public Couleur getRandomCouleur() {

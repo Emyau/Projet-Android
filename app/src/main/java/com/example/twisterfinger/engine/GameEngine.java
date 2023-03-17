@@ -51,12 +51,14 @@ public class GameEngine {
         state = StateEnum.GAME_OVER;
     }
 
-    public void checkGoodCircle(TwisterCircle circleTouched) {
+    public boolean checkGoodCircle(TwisterCircle circleTouched) {
         if (!circleTouched.getCouleur().equals(rCouleur)) {
             this.state = StateEnum.GAME_OVER;
+            return false;
         } else {
             circleTouched.setFingerEnum(rfinger);
             state = StateEnum.WHEEL;
+            return true;
         }
     }
 

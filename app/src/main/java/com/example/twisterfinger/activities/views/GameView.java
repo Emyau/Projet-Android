@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.twisterfinger.Wheel;
 import com.example.twisterfinger.activities.views.objects.Couleur;
 import com.example.twisterfinger.activities.views.objects.TwisterCircle;
 import com.example.twisterfinger.engine.GameEngine;
@@ -33,10 +36,11 @@ public class GameView extends View {
 
     private final Runnable onDrawRunnable;
     private final Handler handler;
+    private final Wheel wheel;
 
     private float ambiantLight;
 
-    SharedPreferences prefs = this.getContext().getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
+    SharedPreferences prefs;
 
     private final SensorEventListener listenerLight = new SensorEventListener() {
         @Override
@@ -54,6 +58,9 @@ public class GameView extends View {
 
     public GameView(Context context) {
         super(context);
+
+        prefs = getContext().getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
+
         twisterCircleList = new ArrayList<>();
         int nbElement = NB_COLLUMN * NB_ROW;
         for (int i = 0; i < nbElement; i++) {
@@ -73,6 +80,7 @@ public class GameView extends View {
         handler = new Handler();
         engine = new GameEngine();
         randomFinger = new RandomGenerator(context);
+        wheel = new Wheel(context);
 
     }
 
@@ -105,12 +113,21 @@ public class GameView extends View {
         long startTime = System.nanoTime();
 
         float coefLumi = prefs.getFloat("coefLumi", 0);
+
         switch (engine.getState()) {
             case WHEEL:
-                engine.setrCouleur(randomFinger.getRandomCouleur());
-                engine.setRfinger(randomFinger.getRandomFinger());
-                Log.d("DEV", String.format("Couleur %s, doigt %s", engine.getrCouleur().name(), engine.getRfinger().name()));
-                engine.nextState();
+                switch (wheel.getState()) {
+                    case WAIT_TO_BLOW:
+                    case SPINNING:
+                        break;
+                    case IDLE:
+                        engine.setrCouleur(wheel.getCouleur());
+                        engine.setRfinger(wheel.getFinger());
+                        Log.d("DEV", String.format("Couleur %s, doigt %s", engine.getrCouleur().name(), engine.getRfinger().name()));
+                        wheel.valueConsumed();
+                        engine.nextState();
+                        break;
+                }
                 break;
             case FINGER:
                 break;
@@ -121,7 +138,12 @@ public class GameView extends View {
                 break;
         }
 
+        Paint p = new Paint();
+        p.setColor(Color.WHITE);
+        canvas.drawText(Float.toString(coefLumi), 50, 50, p);
+
         drawCircles(canvas, ambiantLight, coefLumi);
+        wheel.draw(canvas);
 
         long stopTime = System.nanoTime();
         long timeElapsed = (stopTime - startTime) / 1000000;
@@ -148,7 +170,9 @@ public class GameView extends View {
                     int index = event.getActionIndex();
                     TwisterCircle circleTouched = getCircleTouched(event.getX(index), event.getY(index));
                     if (circleTouched != null) {
-                        engine.checkGoodCircle(circleTouched);
+                        if (engine.checkGoodCircle(circleTouched)) {
+                            wheel.trigger();
+                        }
                     }
                     break;
                 case FREEZE:
