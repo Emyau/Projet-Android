@@ -8,6 +8,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -28,6 +29,8 @@ public class TitleActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
 
+    private boolean valueDeprecated = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +40,39 @@ public class TitleActivity extends AppCompatActivity {
         editor = prefs.edit();
         setButtons();
         setButtonListeners();
+        setupLumCaptor();
+    }
+
+    private void setupLumCaptor() {
+        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        Sensor lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+
+        SharedPreferences prefs = appContext.getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        if (lightSensor == null) {
+            Toast.makeText(this, "The device has no light sensor !", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        SensorEventListener lightEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                if (valueDeprecated) {
+                    Log.d("DEV", "onSensorChanged: UPDATE LUM");
+                    float value = sensorEvent.values[0];
+                    editor.putFloat("coefLumi", value).apply();
+                    valueDeprecated = false;
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+                //pas besoin ici
+            }
+        };
+
+        sensorManager.registerListener(lightEventListener, lightSensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     private void setButtons() {
@@ -82,35 +118,7 @@ public class TitleActivity extends AppCompatActivity {
     }
 
     private void calibrateLight() {
-        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Sensor lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-
-        SharedPreferences prefs = appContext.getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        if (lightSensor == null) {
-            Toast.makeText(this, "The device has no light sensor !", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
-        SensorEventListener lightEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                float value = sensorEvent.values[0];
-                if (prefs.getFloat("coefLumi", 0) == 0) {
-                    editor.putFloat("coefLumi", value);
-                    editor.apply();
-                }
-            }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int i) {
-                //pas besoin ici
-            }
-        };
-
-        sensorManager.registerListener(lightEventListener, lightSensor, SensorManager.SENSOR_DELAY_FASTEST);
-
+        valueDeprecated = true;
         CharSequence text = "Lumière calibrée !";
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(appContext, text, duration);
