@@ -11,6 +11,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -215,5 +217,13 @@ public class GameView extends View {
             }
         }
         return null;
+    }
+
+    private void gameOver() {
+        // Get instance of Vibrator from current Context
+        Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+
+// Vibrate for 400 milliseconds
+        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
     }
 }
