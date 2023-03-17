@@ -16,6 +16,7 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.twisterfinger.Wheel;
 import com.example.twisterfinger.activities.views.objects.Couleur;
@@ -222,8 +223,8 @@ public class GameView extends View {
     private void gameOver() {
         // Get instance of Vibrator from current Context
         Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-
-// Vibrate for 400 milliseconds
+        // Vibrate for 400 milliseconds
         v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+        Toast.makeText(this.getContext(), "LOOSER !", Toast.LENGTH_SHORT).show();
     }
 }
