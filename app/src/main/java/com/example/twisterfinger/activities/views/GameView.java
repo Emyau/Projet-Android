@@ -29,7 +29,7 @@ import java.util.List;
 
 public class GameView extends View {
 
-    private static final int NB_ROW = 6;
+    private static final int NB_ROW = 7;
     private static final int NB_COLLUMN = 4;
     private static final long UPDATE_TIME = 1000 / 60;
 
@@ -57,7 +57,6 @@ public class GameView extends View {
         }
     };
     private GameEngine engine;
-    private RandomGenerator randomFinger;
 
     public GameView(Context context) {
         super(context);
@@ -82,7 +81,7 @@ public class GameView extends View {
         onDrawRunnable = this::invalidate;
         handler = new Handler();
         engine = new GameEngine(context);
-        randomFinger = new RandomGenerator(context);
+        RandomGenerator randomFinger = new RandomGenerator(context);
         wheel = new Wheel(context);
 
     }

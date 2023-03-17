@@ -131,8 +131,6 @@ public class TitleActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        editor.putFloat("coefLumi", 0);
-        editor.apply();
     }
 
 }
