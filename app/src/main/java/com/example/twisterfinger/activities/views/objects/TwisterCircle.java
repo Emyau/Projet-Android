@@ -25,7 +25,7 @@ public class TwisterCircle {
 
     public void draw(Canvas canvas, float ambiantLight, float coefLumi) {
 
-        //Couleur newCouleur = couleur;
+        // Couleur newCouleur = couleur;
 
         if (ambiantLight < coefLumi / 3) {
             switch (couleur.getCouleurAsHue()) {
@@ -91,6 +91,10 @@ public class TwisterCircle {
 
     public void setColor(int color) {
         paint.setColor(color);
+    }
+
+    public Couleur getCouleur() {
+        return couleur;
     }
 
     public void setCx(int cx) {

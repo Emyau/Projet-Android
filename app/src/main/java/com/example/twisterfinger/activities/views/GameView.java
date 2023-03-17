@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -17,6 +16,7 @@ import android.view.View;
 import com.example.twisterfinger.activities.views.objects.Couleur;
 import com.example.twisterfinger.activities.views.objects.TwisterCircle;
 import com.example.twisterfinger.engine.GameEngine;
+import com.example.twisterfinger.engine.RandomFinger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +50,7 @@ public class GameView extends View {
         }
     };
     private GameEngine engine;
+    private RandomFinger randomFinger;
 
     public GameView(Context context) {
         super(context);
@@ -71,6 +72,7 @@ public class GameView extends View {
         onDrawRunnable = this::invalidate;
         handler = new Handler();
         engine = new GameEngine();
+        randomFinger = new RandomFinger();
 
     }
 
@@ -105,12 +107,17 @@ public class GameView extends View {
         float coefLumi = prefs.getFloat("coefLumi", 0);
         switch (engine.getState()) {
             case WHEEL:
+                engine.setrCouleur(randomFinger.getRandomCouleur());
+                engine.setRfinger(randomFinger.getRandomFinger());
+                Log.d("DEV", String.format("Couleur %s, doigt %s", engine.getrCouleur().name(), engine.getRfinger().name()));
+                engine.nextState();
                 break;
             case FINGER:
                 break;
             case FREEZE:
                 break;
             case GAME_OVER:
+                Log.d("DEV", "onDraw: LOOSER");
                 break;
         }
 
@@ -134,14 +141,36 @@ public class GameView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) {
-            Log.d("DEV", String.format("onTouchEvent: Touch at %f %f", event.getX(), event.getY()));
-            int index = event.getActionIndex();
-            TwisterCircle circleTouched = getCircleTouched(event.getX(index), event.getY(index));
-            if (circleTouched != null) {
-                // Do something when circle is touched here
-                circleTouched.setColor(Color.BLUE);
+            switch (engine.getState()) {
+                case WHEEL:
+                    break;
+                case FINGER:
+                    int index = event.getActionIndex();
+                    TwisterCircle circleTouched = getCircleTouched(event.getX(index), event.getY(index));
+                    if (circleTouched != null) {
+                        // Do something when circle is touched here
+                        engine.checkGoodCircle(circleTouched);
+                    }
+                    break;
+                case FREEZE:
+                    break;
+                case GAME_OVER:
+                    break;
             }
             return true;
+        } else if (event.getAction() == MotionEvent.ACTION_UP || event.getActionMasked() == MotionEvent.ACTION_POINTER_UP) {
+            switch (engine.getState()) {
+                case WHEEL:
+                    break;
+                case FINGER:
+                    engine.gameover();
+                    break;
+                case FREEZE:
+                    break;
+                case GAME_OVER:
+                    break;
+            }
+
         }
         return false;
     }
